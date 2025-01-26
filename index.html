@@ -1,54 +1,110 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сайт фильмов и сериалов</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Фильмы, Сериалы и Аниме</title>
     <style>
-        #search-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #fff;
+        }
+        header {
+            background-color: #1f1f1f;
             padding: 20px;
+            text-align: center;
         }
-
-        #search-form input, #search-form button {
-            width: 90%; /* Поля и кнопки занимают почти всю ширину */
-            max-width: 400px; /* Ограничение ширины */
-            margin: 10px 0; /* Отступы между элементами */
+        header h1 {
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 10px;
-            font-size: 16px;
         }
-
-        @media (max-width: 768px) {
-            #search-form h1 {
-                font-size: 20px;
-            }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 300px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #1f1f1f;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .card h3 {
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">𝘗𝘰𝘥𝘗𝘐𝘝𝘖</div>
-        <nav class="top-right-nav">
-            <a href="info.html">Помощь</a>
-        </nav>
+        <h1>Сайт для просмотра фильмов, сериалов и аниме</h1>
     </header>
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Поиск...">
+        </div>
+        <div class="grid" id="content-grid">
+            <!-- Карточки будут добавляться динамически -->
+        </div>
+    </div>
+    <script>
+        const content = [
+            { title: "Фильм 1", image: "https://via.placeholder.com/200x300", type: "Фильм" },
+            { title: "Сериал 1", image: "https://via.placeholder.com/200x300", type: "Сериал" },
+            { title: "Аниме 1", image: "https://via.placeholder.com/200x300", type: "Аниме" },
+            { title: "Фильм 2", image: "https://via.placeholder.com/200x300", type: "Фильм" },
+            { title: "Сериал 2", image: "https://via.placeholder.com/200x300", type: "Сериал" },
+            { title: "Аниме 2", image: "https://via.placeholder.com/200x300", type: "Аниме" }
+        ];
 
-    <main>
-        <section id="search-form" class="section">
-            <h1>Поиск фильма</h1>
-            <form id="search-film-form" action="player.html" method="GET">
-                <label for="movie-title">Введите название фильма:</label>
-                <input type="text" id="movie-title" name="movie-title" required>
-                <button type="submit">Найти</button>
-            </form>
-        </section>
-    </main>
+        const grid = document.getElementById('content-grid');
+        const searchInput = document.getElementById('search');
 
-    <footer>
-        <p>&copy; 2024 PodPIVO. Все права защищены.</p>
-    </footer>
+        function renderContent(filter = "") {
+            grid.innerHTML = "";
+            const filteredContent = content.filter(item => item.title.toLowerCase().includes(filter.toLowerCase()));
+            filteredContent.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}">
+                    <h3>${item.title}</h3>
+                    <p>${item.type}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            renderContent(e.target.value);
+        });
+
+        renderContent();
+    </script>
 </body>
 </html>
