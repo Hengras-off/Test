@@ -1,26 +1,36 @@
-const projects = [
-  { title: "Проект 1", img: "your-image1.jpg", description: "Описание проекта 1" },
-  { title: "Проект 2", img: "your-image2.jpg", description: "Описание проекта 2" },
-  { title: "Проект 3", img: "your-image3.jpg", description: "Описание проекта 3" },
-];
-
 const container = document.querySelector('.card-container');
 
-projects.forEach(project => {
-  const card = document.createElement('div');
-  card.classList.add('card');
-  
-  const img = document.createElement('img');
-  img.src = project.img;
-  card.appendChild(img);
+// API ключ (dsf)
+const accessKey = 'gd_mR6ZSGcgduQ7WdL5VB-euH2JivfyYhTmLtThN0ZI';
 
-  const title = document.createElement('h2');
-  title.innerText = project.title;
-  card.appendChild(title);
+// Функция для получения случайных изображений
+async function fetchImages() {
+  try {
+    const response = await fetch(`https://api.unsplash.com/photos/random?client_id=${accessKey}&count=3`);
+    const images = await response.json();
 
-  const description = document.createElement('p');
-  description.innerText = project.description;
-  card.appendChild(description);
+    images.forEach(image => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      
+      const img = document.createElement('img');
+      img.src = image.urls.small;  // URL изображения с Unsplash
+      card.appendChild(img);
 
-  container.appendChild(card);
-});
+      const title = document.createElement('h2');
+      title.innerText = "Проект";
+      card.appendChild(title);
+
+      const description = document.createElement('p');
+      description.innerText = image.alt_description || "Описание проекта";
+      card.appendChild(description);
+
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error('Error fetching images:', error);
+  }
+}
+
+// Загрузка изображений при загрузке страницы
+fetchImages();
