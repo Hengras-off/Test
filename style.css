@@ -86,3 +86,31 @@ footer {
 footer p {
   color: #777;
 }
+
+/* Общие стили */
+body {
+  background-color: #181818;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* Стили для шапки */
+header {
+  background-color: #141414;
+  padding: 20px;
+}
+
+/* Стили для карточек */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Стили для подвала */
+footer {
+  background-color: #141414;
+  padding: 20px;
+  text-align: center;
+}
+
