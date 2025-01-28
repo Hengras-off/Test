@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск фильмов | PodPIVO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Дополнительные стили для страницы поиска */
+        #search-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.8)), url("https://images.unsplash.com/photo-1494587351196-bbf5f29cff42?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1351&q=80") center center fixed;
+            background-size: cover;
+            color: white;
+        }
+
+        #search-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #search-input {
+            width: 80%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #fff;
+            border-radius: 50px;
+            background: transparent;
+            color: #fff;
+            font-size: 18px;
+            font-family: 'Comfortaa', cursive;
+            text-align: center;
+            outline: none;
+        }
+
+        #search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #search-button {
+            padding: 10px 40px;
+            border-radius: 50px;
+            border: 2px solid #fff;
+            font-size: 18px;
+            font-family: 'Comfortaa', cursive;
+            font-weight: bold;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.4s ease-in-out;
+        }
+
+        #search-button:hover {
+            background: #fff;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Анимация загрузки -->
+    <div id="loading">
+        <div id="spinner"></div>
+    </div>
+
+    <!-- Шапка -->
+    <div id="header" class="animated slideInDown" style="animation-delay:1.8s;">
+        <div id="title">PodPIVO</div><br>
+        <div id="links">
+            <a href="index.html#skills">Поиск</a>
+            <a href="index.html#work" style="margin:0px 60px;">Новинки</a>
+            <a href="index.html#contact">Помощь</a>
+        </div>
+    </div>
+
+    <!-- Секция поиска -->
+    <section id="search-section">
+        <form id="search-form">
+            <input type="text" id="search-input" placeholder="Введите название фильма" required>
+            <button type="submit" id="search-button">Найти</button>
+        </form>
+    </section>
+
+    <!-- Скрипты -->
+    <script>
+        // Убираем анимацию загрузки через 1.5 секунды
+        setTimeout(function() {
+            $("#loading").addClass("animated fadeOut");
+            setTimeout(function() {
+                $("#loading").removeClass("animated fadeOut");
+                $("#loading").css("display", "none");
+            }, 800);
+        }, 1500);
+
+        // Обработка формы поиска
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Предотвращаем отправку формы
+            const movieTitle = document.getElementById('search-input').value.trim();
+            if (movieTitle) {
+                // Перенаправляем на страницу плеера с параметром movie-title
+                window.location.href = `player-minimal.html?movie-title=${encodeURIComponent(movieTitle)}`;
+            } else {
+                alert('Пожалуйста, введите название фильма.');
+            }
+        });
+    </script>
+</body>
+</html>
