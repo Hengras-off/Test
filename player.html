@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Плеер фильма | PodPIVO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        #player-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 80vh;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        #kinobox-player {
+            width: 90%;
+            max-width: 700px;
+            height: auto;
+            aspect-ratio: 16 / 9;
+        }
+
+        @media (max-width: 768px) {
+            #player-section {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div id="spinner"></div>
+    </div>
+    <div id="header" class="animated slideInDown" style="animation-delay:1.8s;">
+        <div id="title">PodPIVO</div><br>
+        <div id="links">
+            <a href="index.html#skills">Поиск</a>
+            <a href="index.html#work" style="margin:0px 60px;">Новинки</a>
+            <a href="index.html#contact">Помощь</a>
+        </div>
+    </div>
+
+    <main>
+        <section id="player-section">
+            <div id="kinobox-player" class="kinobox_player"></div>
+            <script src="https://kinobox.tv/kinobox.min.js"></script>
+            <script>
+                const urlParams = new URLSearchParams(window.location.search);
+                const movieTitle = urlParams.get('movie-title');
+                if (movieTitle) {
+                    kbox('#kinobox-player', {search: {title: movieTitle}});
+                } else {
+                    alert('Название фильма не найдено.');
+                }
+            </script>
+        </section>
+    </main>
+
+    <div id="footer">
+        made on earth by a human <br><br> <a href="https://imfunniee.github.io">imfunniee</a>
+    </div>
+    <script src="index.js" type="text/javascript"></script>
+</body>
+</html>
