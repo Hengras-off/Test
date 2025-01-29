@@ -66,6 +66,13 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        #genre-filter {
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -92,7 +99,25 @@
         let currentPage = 1;
         const apiKey = config.apiKey;
         let selectedGenre = "";
-        
+        let allGenres = [];
+
+        // Function to load genres into the filter dropdown
+        function loadGenres() {
+            fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ru-RU`)
+                .then(response => response.json())
+                .then(data => {
+                    allGenres = data.genres;
+                    const genreFilter = document.getElementById("genre-filter");
+                    data.genres.forEach(genre => {
+                        const option = document.createElement("option");
+                        option.value = genre.id;
+                        option.textContent = genre.name;
+                        genreFilter.appendChild(option);
+                    });
+                });
+        }
+
+        // Load movies with infinite scroll functionality
         function loadMovies(page = 1, genreId = "", query = "") {
             let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
             if (genreId) apiUrl += `&with_genres=${genreId}`;
@@ -102,7 +127,7 @@
                 .then(response => response.json())
                 .then(data => {
                     const movieGrid = document.getElementById('movie-grid');
-                    if (page === 1) movieGrid.innerHTML = ""; 
+                    if (page === 1) movieGrid.innerHTML = ""; // Clear the grid on new search
                     
                     data.results.forEach(movie => {
                         const movieCard = document.createElement('div');
@@ -117,6 +142,7 @@
                 });
         }
 
+        // Show movie details in modal
         function showMovieDetails(movie) {
             document.getElementById('modal-poster').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
             document.getElementById('modal-title').textContent = movie.title;
@@ -125,23 +151,39 @@
             document.getElementById('movie-modal').style.display = 'flex';
         }
 
+        // Event listener for genre filter
         document.getElementById("genre-filter").addEventListener("change", function() {
             selectedGenre = this.value;
             currentPage = 1;
             loadMovies(currentPage, selectedGenre);
         });
 
+        // Event listener for search input
         document.getElementById("search-box").addEventListener("input", function() {
             const query = this.value.trim();
             currentPage = 1;
             loadMovies(currentPage, "", query);
         });
 
+        // Event listener to close the modal
         document.getElementById("close-modal").addEventListener("click", () => {
             document.getElementById("movie-modal").style.display = "none";
         });
 
+        // Infinite scroll functionality
+        window.addEventListener('scroll', () => {
+            const scrollPosition = document.documentElement.scrollTop + window.innerHeight;
+            const pageHeight = document.documentElement.scrollHeight;
+            if (scrollPosition === pageHeight) {
+                currentPage++;
+                loadMovies(currentPage, selectedGenre);
+            }
+        });
+
+        // Initialize the page
+        loadGenres();
         loadMovies();
+
     </script>
 </body>
 </html>
