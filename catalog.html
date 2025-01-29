@@ -15,24 +15,92 @@
             window.location.href = `player.html?movie-title=${encodeURIComponent(title)}`;
         }
     </script>
+    <style>
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .movie-card {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+        .movie-card h3 {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        .watch-button {
+            display: block;
+            background: #ff4500;
+            color: white;
+            padding: 10px;
+            margin: 10px auto;
+            border: none;
+            cursor: pointer;
+            width: 80%;
+            border-radius: 5px;
+        }
+        .watch-button:hover {
+            background: #e03e00;
+        }
+    </style>
 </head>
 <body>
+    <input type="text" id="search-box" placeholder="Поиск фильма...">
+    <div id="filters">
+        <select id="genre-filter">
+            <option value="">Все жанры</option>
+        </select>
+    </div>
     <div id="catalog">
         <h1>Каталог фильмов</h1>
         <div class="movie-grid" id="movie-grid"></div>
     </div>
     <script>
+        let currentPage = 1;
         const apiKey = config.apiKey;
+        let selectedGenre = "";
 
-        function loadMovies() {
-            fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=1`)
+        function loadGenres() {
+            fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ru-RU`)
+                .then(response => response.json())
+                .then(data => {
+                    const genreFilter = document.getElementById("genre-filter");
+                    data.genres.forEach(genre => {
+                        const option = document.createElement("option");
+                        option.value = genre.id;
+                        option.textContent = genre.name;
+                        genreFilter.appendChild(option);
+                    });
+                });
+        }
+
+        function loadMovies(page = 1, genreId = "", query = "") {
+            let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
+            if (genreId) apiUrl += `&with_genres=${genreId}`;
+            if (query) apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ru-RU&page=${page}&query=${query}`;
+            
+            fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     const movieGrid = document.getElementById('movie-grid');
+                    if (page === 1) movieGrid.innerHTML = "";
+                    
                     data.results.forEach(movie => {
                         const movieCard = document.createElement('div');
                         movieCard.className = 'movie-card';
-                        movieCard.innerHTML += `
+                        movieCard.innerHTML = `
+                            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                            <h3>${movie.title}</h3>
                             <button class="watch-button" onclick="watchMovie('${movie.title}')">Смотреть фильм</button>
                         `;
                         movieGrid.appendChild(movieCard);
@@ -40,6 +108,28 @@
                 });
         }
 
+        document.getElementById("genre-filter").addEventListener("change", function() {
+            selectedGenre = this.value;
+            currentPage = 1;
+            loadMovies(currentPage, selectedGenre);
+        });
+
+        document.getElementById("search-box").addEventListener("input", function() {
+            const query = this.value.trim();
+            currentPage = 1;
+            loadMovies(currentPage, "", query);
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollPosition = document.documentElement.scrollTop + window.innerHeight;
+            const pageHeight = document.documentElement.scrollHeight;
+            if (scrollPosition === pageHeight) {
+                currentPage++;
+                loadMovies(currentPage, selectedGenre);
+            }
+        });
+
+        loadGenres();
         loadMovies();
     </script>
 </body>
