@@ -57,27 +57,19 @@
             overflow-y: auto;
             max-height: 80vh;
         }
-        #movie-modal-content img {
+        #search-box {
             width: 100%;
-            border-radius: 10px;
-        }
-        #movie-modal-content h2 {
-            margin: 15px 0 10px;
-        }
-        #movie-modal-content p {
-            margin: 10px 0;
-        }
-        #close-modal {
-            background: #ff5555;
-            border: none;
-            padding: 10px 20px;
-            color: white;
+            max-width: 400px;
+            padding: 10px;
+            margin: 20px auto;
+            display: block;
             border-radius: 5px;
-            cursor: pointer;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
+    <input type="text" id="search-box" placeholder="Поиск фильма...">
     <div id="filters">
         <select id="genre-filter">
             <option value="">Все жанры</option>
@@ -101,23 +93,10 @@
         const apiKey = config.apiKey;
         let selectedGenre = "";
         
-        function loadGenres() {
-            fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ru-RU`)
-                .then(response => response.json())
-                .then(data => {
-                    const genreFilter = document.getElementById("genre-filter");
-                    data.genres.forEach(genre => {
-                        const option = document.createElement("option");
-                        option.value = genre.id;
-                        option.textContent = genre.name;
-                        genreFilter.appendChild(option);
-                    });
-                });
-        }
-
-        function loadMovies(page = 1, genreId = "") {
+        function loadMovies(page = 1, genreId = "", query = "") {
             let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
             if (genreId) apiUrl += `&with_genres=${genreId}`;
+            if (query) apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ru-RU&page=${page}&query=${query}`;
             
             fetch(apiUrl)
                 .then(response => response.json())
@@ -152,18 +131,16 @@
             loadMovies(currentPage, selectedGenre);
         });
 
+        document.getElementById("search-box").addEventListener("input", function() {
+            const query = this.value.trim();
+            currentPage = 1;
+            loadMovies(currentPage, "", query);
+        });
+
         document.getElementById("close-modal").addEventListener("click", () => {
             document.getElementById("movie-modal").style.display = "none";
         });
 
-        window.addEventListener("scroll", () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-                currentPage++;
-                loadMovies(currentPage, selectedGenre);
-            }
-        });
-
-        loadGenres();
         loadMovies();
     </script>
 </body>
