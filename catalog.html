@@ -52,9 +52,29 @@
         .watch-button:hover {
             background: #e03e00;
         }
+        #header {
+            text-align: center;
+            padding: 20px;
+            background: #222;
+            color: white;
+        }
+        #links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
+    <div id="header">
+        <div id="title">PodPIVO</div><br>
+        <div id="links">
+            <a href="search.html">Поиск</a>
+            <a href="catalog.html" style="margin:0px 60px;">Каталог</a>
+            <a href="#contact">Помощь</a>
+        </div>
+    </div>
     <input type="text" id="search-box" placeholder="Поиск фильма...">
     <div id="filters">
         <select id="genre-filter">
@@ -107,27 +127,6 @@
                     });
                 });
         }
-
-        document.getElementById("genre-filter").addEventListener("change", function() {
-            selectedGenre = this.value;
-            currentPage = 1;
-            loadMovies(currentPage, selectedGenre);
-        });
-
-        document.getElementById("search-box").addEventListener("input", function() {
-            const query = this.value.trim();
-            currentPage = 1;
-            loadMovies(currentPage, "", query);
-        });
-
-        window.addEventListener('scroll', () => {
-            const scrollPosition = document.documentElement.scrollTop + window.innerHeight;
-            const pageHeight = document.documentElement.scrollHeight;
-            if (scrollPosition === pageHeight) {
-                currentPage++;
-                loadMovies(currentPage, selectedGenre);
-            }
-        });
 
         loadGenres();
         loadMovies();
