@@ -10,17 +10,45 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="config.js"></script>
     <link rel="stylesheet" href="index.css">
-    <script>
-        function watchMovie(title) {
-            window.location.href = `player.html?movie-title=${encodeURIComponent(title)}`;
-        }
-    </script>
     <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+            font-family: 'Comfortaa', cursive;
+            font-weight: bold;
+            color: #fff;
+            background: rgb(0, 0, 0);
+            scroll-behavior: smooth;
+        }
+        #header {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            background: #222;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+        #links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 1.2em;
+            padding: 5px 8px;
+            border-bottom: 2px solid transparent;
+            transition: 0.4s ease-in-out;
+        }
+        #links a:hover {
+            border-bottom: 2px solid #fff;
+        }
         .movie-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
-            padding: 20px;
+            padding: 100px 20px 20px;
         }
         .movie-card {
             background: #333;
@@ -52,26 +80,19 @@
         .watch-button:hover {
             background: #e03e00;
         }
-        #header {
-            text-align: center;
-            padding: 20px;
-            background: #222;
-            color: white;
-        }
-        #links a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-            font-size: 1.2em;
-        }
     </style>
+    <script>
+        function watchMovie(title) {
+            window.location.href = `player.html?movie-title=${encodeURIComponent(title)}`;
+        }
+    </script>
 </head>
 <body>
     <div id="header">
-        <div id="title">PodPIVO</div><br>
+        <div id="title">PodPIVO</div>
         <div id="links">
             <a href="search.html">Поиск</a>
-            <a href="catalog.html" style="margin:0px 60px;">Каталог</a>
+            <a href="catalog.html">Каталог</a>
             <a href="#contact">Помощь</a>
         </div>
     </div>
