@@ -99,16 +99,12 @@
     <script>
         let currentPage = 1;
         const apiKey = config.apiKey;
-        let genres = {};
-
+        let selectedGenre = "";
+        
         function loadGenres() {
             fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ru-RU`)
                 .then(response => response.json())
                 .then(data => {
-                    genres = data.genres.reduce((acc, genre) => {
-                        acc[genre.id] = genre.name;
-                        return acc;
-                    }, {});
                     const genreFilter = document.getElementById("genre-filter");
                     data.genres.forEach(genre => {
                         const option = document.createElement("option");
@@ -120,13 +116,15 @@
         }
 
         function loadMovies(page = 1, genreId = "") {
-            let apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ru-RU&page=${page}`;
+            let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
             if (genreId) apiUrl += `&with_genres=${genreId}`;
-
+            
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     const movieGrid = document.getElementById('movie-grid');
+                    if (page === 1) movieGrid.innerHTML = ""; 
+                    
                     data.results.forEach(movie => {
                         const movieCard = document.createElement('div');
                         movieCard.className = 'movie-card';
@@ -141,14 +139,15 @@
         }
 
         document.getElementById("genre-filter").addEventListener("change", function() {
-            document.getElementById("movie-grid").innerHTML = "";
-            loadMovies(1, this.value);
+            selectedGenre = this.value;
+            currentPage = 1;
+            loadMovies(currentPage, selectedGenre);
         });
 
         window.addEventListener("scroll", () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
                 currentPage++;
-                loadMovies(currentPage);
+                loadMovies(currentPage, selectedGenre);
             }
         });
 
