@@ -116,9 +116,14 @@
             background: #e03e00;
         }
 
-        /* Добавленный отступ для каталога */
-        #catalog {
+        /* Добавленные стили для нового контейнера */
+        #search-and-filters {
             padding-top: 120px; /* Отступ сверху */
+        }
+
+        /* Отступ для каталога */
+        #catalog {
+            padding-top: 20px; /* Меньший отступ, так как поиск и фильтры уже сдвинуты */
         }
     </style>
 </head>
@@ -132,12 +137,15 @@
         </div>
     </div>
 
-    <input type="text" id="search-box" placeholder="Введите название фильма...">
-    
-    <div id="filters">
-        <select id="genre-filter">
-            <option value="">Все жанры</option>
-        </select>
+    <!-- Новый контейнер для поиска и фильтров -->
+    <div id="search-and-filters">
+        <input type="text" id="search-box" placeholder="Введите название фильма...">
+        
+        <div id="filters">
+            <select id="genre-filter">
+                <option value="">Все жанры</option>
+            </select>
+        </div>
     </div>
 
     <div id="catalog">
