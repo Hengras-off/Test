@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Каталог фильмов</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .movie-card {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+        .movie-card h3 {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div id="spinner"></div>
+    </div>
+    <div id="header" class="animated slideInDown" style="animation-delay:1.8s;">
+        <div id="title">PodPIVO</div><br>
+        <div id="links">
+            <a href="search.html">Поиск</a>
+            <a href="#work" style="margin:0px 60px;">Новинки</a>
+            <a href="#contact">Помощь</a>
+        </div>
+    </div>
+
+    <center>
+        <div id="middle">
+            <div id="tagline" class="animated zoomIn" style="animation-delay:1.8s;">
+                Каталог фильмов<br>
+                <button class="btn_one" onclick="window.location.href = 'search.html';">Смотреть</button>
+            </div>
+        </div>
+    </center>
+
+    <div id="portfolio">
+        <div id="catalog">
+            <h1>Каталог фильмов</h1>
+            <div class="movie-grid" id="movie-grid">
+                <!-- Фильмы будут загружены сюда -->
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        made on earth by a human <br><br> <a href="https://imfunniee.github.io">imfunniee</a>
+    </div>
+
+    <script>
+        const apiKey = '5205b8c031492a75039f7f449c72a948';
+        const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ru-RU&page=1`;
+
+        $(document).ready(function() {
+            $.get(apiUrl, function(data) {
+                const movies = data.results;
+                const movieGrid = $('#movie-grid');
+
+                movies.forEach(movie => {
+                    const movieCard = `
+                        <div class="movie-card">
+                            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                            <h3>${movie.title}</h3>
+                        </div>
+                    `;
+                    movieGrid.append(movieCard);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
