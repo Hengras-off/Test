@@ -144,11 +144,13 @@
 
         // Show movie details in modal
         function showMovieDetails(movie) {
-            document.getElementById('modal-poster').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-            document.getElementById('modal-title').textContent = movie.title;
-            document.getElementById('modal-overview').textContent = movie.overview;
-            document.getElementById('modal-rating').textContent = movie.vote_average;
-            document.getElementById('movie-modal').style.display = 'flex';
+    <script>
+    function showMovieDetails(movie) {
+        const movieTitle = encodeURIComponent(movie.title);
+        window.location.href = `player.html?movie-title=${movieTitle}`;
+    }
+</script>
+
         }
 
         // Event listener for genre filter
