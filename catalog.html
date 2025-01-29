@@ -152,7 +152,8 @@
                 .then(response => response.json())
                 .then(data => {
                     const movieGrid = document.getElementById('movie-grid');
-                    if (page === 1) movieGrid.innerHTML = "";
+                    if (page === 1) movieGrid.innerHTML = "<img src="${posterPath}" alt="${movie.title}" onclick="showMovieDetails(${movie.id})">
+";
                     
                     data.results.forEach(movie => {
                         const posterPath = movie.poster_path 
