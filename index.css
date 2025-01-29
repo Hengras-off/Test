@@ -388,3 +388,14 @@ button:focus {
         background-color: #45a049;
     }
 </style>
+#middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Занимает всю высоту экрана */
+}
+
+#tagline {
+    text-align: center;
+}
+
