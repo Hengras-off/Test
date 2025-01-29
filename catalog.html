@@ -23,7 +23,7 @@
             padding: 20px 0;
             text-align: center;
             background: #222;
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             right: 0;
@@ -139,14 +139,6 @@
         });
         document.getElementById("search-box").addEventListener("input", function() {
             loadMovies(1, "", this.value.trim());
-        });
-        window.addEventListener('scroll', () => {
-            const scrollPosition = document.documentElement.scrollTop + window.innerHeight;
-            const pageHeight = document.documentElement.scrollHeight;
-            if (scrollPosition === pageHeight) {
-                currentPage++;
-                loadMovies(currentPage);
-            }
         });
         loadGenres();
         loadMovies();
