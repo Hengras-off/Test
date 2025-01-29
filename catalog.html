@@ -265,22 +265,22 @@ function loadMovies(page = 1, genreId = "", query = "") {
 
 <script>
     function showMovieDetails(movieId) {
-        fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ru-RU`)
-            .then(response => response.json())
-            .then(movie => {
-                document.getElementById("modal-title").textContent = movie.title;
-                document.getElementById("modal-description").textContent = movie.overview || "Описание отсутствует.";
-                document.getElementById("modal-rating").textContent = movie.vote_average ? movie.vote_average + " / 10" : "Нет рейтинга";
-                document.getElementById("modal-poster").src = movie.poster_path 
-                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                    : 'placeholder.jpg';
-                document.getElementById("movie-modal").style.display = "flex";
-            });
-    }
+    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ru-RU`)
+        .then(response => response.json())
+        .then(movie => {
+            document.getElementById("modal-title").textContent = movie.title;
+            document.getElementById("modal-description").textContent = movie.overview || "Описание отсутствует.";
+            document.getElementById("modal-rating").textContent = movie.vote_average ? movie.vote_average + " / 10" : "Нет рейтинга";
+            document.getElementById("modal-poster").src = movie.poster_path 
+                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                : 'placeholder.jpg';
+            document.getElementById("movie-modal").style.display = "flex";
+        });
+}
 
-    function closeModal() {
-        document.getElementById("movie-modal").style.display = "none";
-    }
+function closeModal() {
+    document.getElementById("movie-modal").style.display = "none";
+}
 </script>
 
 </html>
