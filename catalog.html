@@ -119,25 +119,33 @@
 
         // Load movies with infinite scroll functionality
         function loadMovies(page = 1, genreId = "", query = "") {
-            let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
-            if (genreId) apiUrl += `&with_genres=${genreId}`;
-            if (query) apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ru-RU&page=${page}&query=${query}`;
+    let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
+    if (genreId) apiUrl += `&with_genres=${genreId}`;
+    if (query) apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ru-RU&page=${page}&query=${query}`;
+    
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const movieGrid = document.getElementById('movie-grid');
+            if (page === 1) movieGrid.innerHTML = ""; // Clear the grid on new search
             
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const movieGrid = document.getElementById('movie-grid');
-                    if (page === 1) movieGrid.innerHTML = ""; // Clear the grid on new search
-                    
-                    data.results.forEach(movie => {
-                        const movieCard = document.createElement('div');
-                        movieCard.className = 'movie-card';
-                        movieCard.innerHTML = `
-                            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-                            <h3>${movie.title}</h3>
-                        `;
-                        movieCard.addEventListener('click', () => showMovieDetails(movie));
-                        movieGrid.appendChild(movieCard);
+            data.results.forEach(movie => {
+                const movieCard = document.createElement('div');
+                movieCard.className = 'movie-card';
+                movieCard.innerHTML = `
+                    <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                    <h3>${movie.title}</h3>
+                    <button onclick="redirectToPlayer('${encodeURIComponent(movie.title)}')">Смотреть онлайн</button>
+                `;
+                movieGrid.appendChild(movieCard);
+            });
+        });
+}
+
+// Функция для перенаправления на страницу с плеером
+function redirectToPlayer(movieTitle) {
+    window.location.href = `player.html?movie-title=${movieTitle}`;
+}
                     });
                 });
         }
