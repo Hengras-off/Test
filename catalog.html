@@ -19,10 +19,10 @@
             color: #fff;
         }
         #header {
-    min-height: unset;
-    height: 90px; /* Фиксированная высота, можно уменьшить */
-    line-height: 30px; /* Центрирует ссылки внутри */
-    padding: 0; /* Убираем padding, если он не нужен */
+            min-height: unset;
+            height: 60px;
+            line-height: 60px;
+            padding: 0;
             width: 100%;
             max-width: 2000px;
             text-align: center;
@@ -33,9 +33,12 @@
             transform: translateX(-50%);
             z-index: 1000;
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         body {
-            padding-top: 100px;
+            padding-top: 80px;
         }
         #links a {
             color: white;
@@ -48,6 +51,16 @@
         }
         #links a:hover {
             border-bottom: 2px solid #fff;
+        }
+        #search-box, #genre-filter {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: none;
         }
         .movie-grid {
             display: grid;
@@ -81,20 +94,6 @@
             background: #e03e00;
         }
     </style>
-    <script>
-        function watchMovie(title) {
-            window.location.href = `player.html?movie-title=${encodeURIComponent(title)}`;
-        }
-        
-        window.addEventListener('scroll', () => {
-            const scrollPosition = document.documentElement.scrollTop + window.innerHeight;
-            const pageHeight = document.documentElement.scrollHeight - 100;
-            if (scrollPosition >= pageHeight) {
-                currentPage++;
-                loadMovies(currentPage);
-            }
-        });
-    </script>
 </head>
 <body>
     <div id="header">
@@ -104,24 +103,31 @@
             <a href="#contact">Помощь</a>
         </div>
     </div>
-    <input type="text" id="search-box" placeholder="Поиск фильма...">
+
+    <input type="text" id="search-box" placeholder="Введите название фильма...">
+    
     <div id="filters">
         <select id="genre-filter">
             <option value="">Все жанры</option>
         </select>
     </div>
+
     <div id="catalog">
         <h1>Каталог фильмов</h1>
         <div class="movie-grid" id="movie-grid"></div>
     </div>
+
     <script>
         let currentPage = 1;
         const apiKey = config.apiKey;
+        const genreFilter = document.getElementById("genre-filter");
+        const searchBox = document.getElementById("search-box");
+
+        // Загрузка жанров
         function loadGenres() {
             fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ru-RU`)
                 .then(response => response.json())
                 .then(data => {
-                    const genreFilter = document.getElementById("genre-filter");
                     data.genres.forEach(genre => {
                         const option = document.createElement("option");
                         option.value = genre.id;
@@ -130,20 +136,33 @@
                     });
                 });
         }
+
+        // Загрузка фильмов
         function loadMovies(page = 1, genreId = "", query = "") {
-            let apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
-            if (genreId) apiUrl += `&with_genres=${genreId}`;
-            if (query) apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ru-RU&page=${page}&query=${query}`;
+            let apiUrl;
+            
+            if (query) {
+                apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&language=ru-RU&page=${page}&query=${query}`;
+            } else {
+                apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=ru-RU&page=${page}`;
+                if (genreId) apiUrl += `&with_genres=${genreId}`;
+            }
+
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
                     const movieGrid = document.getElementById('movie-grid');
                     if (page === 1) movieGrid.innerHTML = "";
+                    
                     data.results.forEach(movie => {
+                        const posterPath = movie.poster_path 
+                            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                            : 'placeholder.jpg';
+
                         const movieCard = document.createElement('div');
                         movieCard.className = 'movie-card';
                         movieCard.innerHTML = `
-                            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                            <img src="${posterPath}" alt="${movie.title}">
                             <h3>${movie.title}</h3>
                             <button class="watch-button" onclick="watchMovie('${movie.title}')">Смотреть фильм</button>
                         `;
@@ -151,6 +170,34 @@
                     });
                 });
         }
+
+        // Фильтр по жанрам
+        genreFilter.addEventListener("change", () => {
+            const genreId = genreFilter.value;
+            loadMovies(1, genreId, searchBox.value);
+        });
+
+        // Поиск фильмов
+        searchBox.addEventListener("input", () => {
+            const query = searchBox.value.trim();
+            loadMovies(1, genreFilter.value, query);
+        });
+
+        // Функция просмотра фильма
+        function watchMovie(title) {
+            window.location.href = `player.html?movie-title=${encodeURIComponent(title)}`;
+        }
+
+        // Загрузка при прокрутке
+        window.addEventListener('scroll', () => {
+            const scrollPosition = document.documentElement.scrollTop + window.innerHeight;
+            const pageHeight = document.documentElement.scrollHeight - 100;
+            if (scrollPosition >= pageHeight) {
+                currentPage++;
+                loadMovies(currentPage, genreFilter.value, searchBox.value);
+            }
+        });
+
         loadGenres();
         loadMovies();
     </script>
