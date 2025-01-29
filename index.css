@@ -389,14 +389,18 @@ button:focus {
     }
 </style>
 #middle {
-    display: flex;
-    justify-content: center; /* Центрируем по горизонтали */
-    align-items: center; /* Центрируем по вертикали */
-    height: 100vh; /* Высота 100% экрана */
-    width: 100%; /* Полная ширина */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
 }
 
 #tagline {
-    text-align: center;
-    width: 100%; /* Чтобы текст не сдвигался влево */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
