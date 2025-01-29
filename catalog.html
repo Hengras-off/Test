@@ -54,6 +54,8 @@
             width: 80%;
             max-width: 600px;
             text-align: left;
+            overflow-y: auto;
+            max-height: 80vh;
         }
         #movie-modal-content img {
             width: 100%;
@@ -76,13 +78,15 @@
     </style>
 </head>
 <body>
+    <div id="filters">
+        <select id="genre-filter">
+            <option value="">Все жанры</option>
+        </select>
+    </div>
     <div id="catalog">
         <h1>Каталог фильмов</h1>
-        <div class="movie-grid" id="movie-grid">
-            <!-- Фильмы будут загружены сюда -->
-        </div>
+        <div class="movie-grid" id="movie-grid"></div>
     </div>
-
     <div id="movie-modal">
         <div id="movie-modal-content">
             <button id="close-modal">Закрыть</button>
@@ -92,24 +96,38 @@
             <p><strong>Рейтинг:</strong> <span id="modal-rating"></span></p>
         </div>
     </div>
-
     <script>
         let currentPage = 1;
         const apiKey = config.apiKey;
+        let genres = {};
 
-        function loadMovies(page = 1) {
-            const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ru-RU&page=${page}`;
+        function loadGenres() {
+            fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ru-RU`)
+                .then(response => response.json())
+                .then(data => {
+                    genres = data.genres.reduce((acc, genre) => {
+                        acc[genre.id] = genre.name;
+                        return acc;
+                    }, {});
+                    const genreFilter = document.getElementById("genre-filter");
+                    data.genres.forEach(genre => {
+                        const option = document.createElement("option");
+                        option.value = genre.id;
+                        option.textContent = genre.name;
+                        genreFilter.appendChild(option);
+                    });
+                });
+        }
+
+        function loadMovies(page = 1, genreId = "") {
+            let apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ru-RU&page=${page}`;
+            if (genreId) apiUrl += `&with_genres=${genreId}`;
 
             fetch(apiUrl)
-                .then(response => {
-                    if (!response.ok) throw new Error('Ошибка запроса');
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
-                    const movies = data.results;
                     const movieGrid = document.getElementById('movie-grid');
-
-                    movies.forEach(movie => {
+                    data.results.forEach(movie => {
                         const movieCard = document.createElement('div');
                         movieCard.className = 'movie-card';
                         movieCard.innerHTML = `
@@ -119,32 +137,22 @@
                         movieCard.addEventListener('click', () => showMovieDetails(movie));
                         movieGrid.appendChild(movieCard);
                     });
-                })
-                .catch(error => {
-                    console.error('Ошибка загрузки фильмов:', error);
                 });
         }
 
-        function showMovieDetails(movie) {
-            const modal = document.getElementById('movie-modal');
-            document.getElementById('modal-poster').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-            document.getElementById('modal-title').textContent = movie.title;
-            document.getElementById('modal-overview').textContent = movie.overview;
-            document.getElementById('modal-rating').textContent = movie.vote_average;
-            modal.style.display = 'flex';
-        }
-
-        document.getElementById('close-modal').addEventListener('click', () => {
-            document.getElementById('movie-modal').style.display = 'none';
+        document.getElementById("genre-filter").addEventListener("change", function() {
+            document.getElementById("movie-grid").innerHTML = "";
+            loadMovies(1, this.value);
         });
 
-        window.addEventListener('scroll', () => {
+        window.addEventListener("scroll", () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
                 currentPage++;
                 loadMovies(currentPage);
             }
         });
 
+        loadGenres();
         loadMovies();
     </script>
 </body>
