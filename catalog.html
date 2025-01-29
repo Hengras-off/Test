@@ -153,15 +153,6 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        body {
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
@@ -400,12 +391,18 @@
             document.getElementById("movie-modal").style.display = "none";
         }
 
-        // Скрипт для скрытия анимации загрузки после загрузки страницы
+        // Скрипт для скрытия анимации загрузки с задержкой
         window.addEventListener('load', function() {
-            const loading = document.getElementById('loading');
-            loading.style.display = 'none';
-            document.body.classList.add('loaded');
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                loading.style.display = 'none';
+                document.body.style.opacity = 1; // Плавное появление контента
+            }, 1800); // Задержка 1.8 секунды, как в index (2).html
         });
+
+        // Устанавливаем начальную прозрачность для плавного появления
+        document.body.style.opacity = 0;
+        document.body.style.transition = 'opacity 0.5s ease-in-out';
     </script>
 </body>
 </html>
