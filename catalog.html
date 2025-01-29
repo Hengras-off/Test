@@ -237,91 +237,114 @@
         loadMovies();
     </script>
 
-    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ИНФОРМАЦИИ О ФИЛЬМЕ -->
-    <div class="modal" id="movie-modal">
-        <div class="modal-content">
-            <span class="close-button" onclick="closeModal()">&times;</span>
-            <img id="modal-poster" src="" alt="Постер">
-            <h2 id="modal-title"></h2>
-            <p><strong>Жанры:</strong> <span id="modal-genres"></span></p>
-            <p><strong>Дата выхода:</strong> <span id="modal-release-date"></span></p>
-            <p><strong>Рейтинг:</strong> <span id="modal-rating"></span></p>
-            <p id="modal-description"></p>
-            <button class="watch-button" onclick="watchMovie(document.getElementById('modal-title').textContent)">Смотреть фильм</button>
-        </div>
+ <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ИНФОРМАЦИИ О ФИЛЬМЕ -->
+<div class="modal" id="movie-modal">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <img id="modal-poster" src="" alt="Постер">
+        <h2 id="modal-title"></h2>
+        <p><strong>Жанры:</strong> <span id="modal-genres"></span></p>
+        <p><strong>Дата выхода:</strong> <span id="modal-release-date"></span></p>
+        <p><strong>Рейтинг:</strong> <span id="modal-rating"></span></p>
+        <p id="modal-description"></p>
+        <button class="watch-button" onclick="watchMovie(document.getElementById('modal-title').textContent)">Смотреть фильм</button>
     </div>
+</div>
 
-    <style>
-        /* Стили для модального окна */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background: #222;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 500px;
-            text-align: center;
-            position: relative;
-            color: white;
-        }
-        .modal-content img {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .modal h2 {
-            margin: 10px 0;
-        }
-        .modal p {
-            font-size: 1em;
-            line-height: 1.5;
-        }
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-        }
-    </style>
+<style>
+    /* Стили для модального окна */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto; /* Добавляем прокрутку, если контент не влезает */
+    }
+    .modal-content {
+        background: #222;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px; /* Уменьшили ширину */
+        width: 90%; /* Адаптивная ширина */
+        max-height: 90vh; /* Ограничиваем высоту */
+        overflow-y: auto; /* Прокрутка внутри модального окна */
+        text-align: center;
+        position: relative;
+        color: white;
+    }
+    .modal-content img {
+        width: 100%;
+        max-height: 200px; /* Уменьшили высоту постера */
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .modal h2 {
+        margin: 10px 0;
+        font-size: 1.5em; /* Уменьшили размер заголовка */
+    }
+    .modal p {
+        font-size: 0.9em; /* Уменьшили размер текста */
+        line-height: 1.4;
+        margin: 8px 0;
+    }
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: white;
+    }
+    .watch-button {
+        display: block;
+        background: #ff4500;
+        color: white;
+        padding: 10px;
+        margin: 10px auto;
+        border: none;
+        cursor: pointer;
+        width: 80%;
+        border-radius: 5px;
+        transition: background 0.3s ease;
+    }
+    .watch-button:hover {
+        background: #e03e00;
+    }
+</style>
 
-    <script>
-        function showMovieDetails(movieId) {
-            fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ru-RU`)
-                .then(response => response.json())
-                .then(movie => {
-                    document.getElementById("modal-title").textContent = movie.title;
-                    document.getElementById("modal-description").textContent = movie.overview || "Описание отсутствует.";
-                    document.getElementById("modal-rating").textContent = movie.vote_average ? movie.vote_average + " / 10" : "Нет рейтинга";
-                    document.getElementById("modal-release-date").textContent = movie.release_date || "Неизвестно";
-                    document.getElementById("modal-poster").src = movie.poster_path 
-                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                        : 'https://via.placeholder.com/500x750?text=Постер+отсутствует';
+<script>
+    function showMovieDetails(movieId) {
+        fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ru-RU`)
+            .then(response => response.json())
+            .then(movie => {
+                document.getElementById("modal-title").textContent = movie.title;
+                document.getElementById("modal-description").textContent = movie.overview || "Описание отсутствует.";
+                document.getElementById("modal-rating").textContent = movie.vote_average ? movie.vote_average + " / 10" : "Нет рейтинга";
+                document.getElementById("modal-release-date").textContent = movie.release_date || "Неизвестно";
+                document.getElementById("modal-poster").src = movie.poster_path 
+                    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                    : 'https://via.placeholder.com/500x750?text=Постер+отсутствует';
 
-                    // Загрузка жанров
-                    fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ru-RU`)
-                        .then(response => response.json())
-                        .then(data => {
-                            const genres = data.genres.map(genre => genre.name).join(", ");
-                            document.getElementById("modal-genres").textContent = genres || "Неизвестно";
-                        });
+                // Загрузка жанров
+                fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=ru-RU`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const genres = data.genres.map(genre => genre.name).join(", ");
+                        document.getElementById("modal-genres").textContent = genres || "Неизвестно";
+                    });
 
-                    document.getElementById("movie-modal").style.display = "flex";
-                });
-        }
+                document.getElementById("movie-modal").style.display = "flex";
+            });
+    }
 
-        function closeModal() {
-            document.getElementById("movie-modal").style.display = "none";
-        }
-    </script>
+    function closeModal() {
+        document.getElementById("movie-modal").style.display = "none";
+    }
+</script>
 </body>
 </html>
