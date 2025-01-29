@@ -138,10 +138,22 @@
                 });
         }
 
+        function showMovieDetails(movie) {
+            document.getElementById('modal-poster').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+            document.getElementById('modal-title').textContent = movie.title;
+            document.getElementById('modal-overview').textContent = movie.overview;
+            document.getElementById('modal-rating').textContent = movie.vote_average;
+            document.getElementById('movie-modal').style.display = 'flex';
+        }
+
         document.getElementById("genre-filter").addEventListener("change", function() {
             selectedGenre = this.value;
             currentPage = 1;
             loadMovies(currentPage, selectedGenre);
+        });
+
+        document.getElementById("close-modal").addEventListener("click", () => {
+            document.getElementById("movie-modal").style.display = "none";
         });
 
         window.addEventListener("scroll", () => {
