@@ -12,6 +12,68 @@
         crossorigin="anonymous"></script>
     <script src="config.js"></script>
     <link rel="stylesheet" href="index.css">
+    <style>
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .movie-card {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+        }
+        .movie-card img {
+            width: 100%;
+            height: auto;
+        }
+        .movie-card h3 {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        #movie-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            justify-content: center;
+            align-items: center;
+        }
+        #movie-modal-content {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+        #movie-modal-content img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        #movie-modal-content h2 {
+            margin: 15px 0 10px;
+        }
+        #movie-modal-content p {
+            margin: 10px 0;
+        }
+        #close-modal {
+            background: #ff5555;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div id="catalog">
@@ -21,16 +83,22 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!config || !config.apiKey) {
-                console.error('Ошибка: API-ключ не найден!');
-                document.getElementById('movie-grid').innerHTML = '<p style="color: red;">Ошибка загрузки фильмов. Проверьте API-ключ.</p>';
-                return;
-            }
+    <div id="movie-modal">
+        <div id="movie-modal-content">
+            <button id="close-modal">Закрыть</button>
+            <img id="modal-poster" src="" alt="">
+            <h2 id="modal-title"></h2>
+            <p id="modal-overview"></p>
+            <p><strong>Рейтинг:</strong> <span id="modal-rating"></span></p>
+        </div>
+    </div>
 
-            const apiKey = config.apiKey;
-            const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ru-RU&page=1`;
+    <script>
+        let currentPage = 1;
+        const apiKey = config.apiKey;
+
+        function loadMovies(page = 1) {
+            const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ru-RU&page=${page}`;
 
             fetch(apiUrl)
                 .then(response => {
@@ -42,20 +110,42 @@
                     const movieGrid = document.getElementById('movie-grid');
 
                     movies.forEach(movie => {
-                        const movieCard = `
-                            <div class="movie-card">
-                                <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
-                                <h3>${movie.title}</h3>
-                            </div>
+                        const movieCard = document.createElement('div');
+                        movieCard.className = 'movie-card';
+                        movieCard.innerHTML = `
+                            <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                            <h3>${movie.title}</h3>
                         `;
-                        movieGrid.innerHTML += movieCard;
+                        movieCard.addEventListener('click', () => showMovieDetails(movie));
+                        movieGrid.appendChild(movieCard);
                     });
                 })
                 .catch(error => {
                     console.error('Ошибка загрузки фильмов:', error);
-                    document.getElementById('movie-grid').innerHTML = '<p style="color: red;">Ошибка загрузки фильмов.</p>';
                 });
+        }
+
+        function showMovieDetails(movie) {
+            const modal = document.getElementById('movie-modal');
+            document.getElementById('modal-poster').src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+            document.getElementById('modal-title').textContent = movie.title;
+            document.getElementById('modal-overview').textContent = movie.overview;
+            document.getElementById('modal-rating').textContent = movie.vote_average;
+            modal.style.display = 'flex';
+        }
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('movie-modal').style.display = 'none';
         });
+
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                currentPage++;
+                loadMovies(currentPage);
+            }
+        });
+
+        loadMovies();
     </script>
 </body>
 </html>
