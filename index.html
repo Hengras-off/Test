@@ -15,73 +15,115 @@
     <div id="loading">
         <div id="spinner"></div>
     </div>
-<div id="header" class="animated slideInDown" style="animation-delay:1.8s; padding: 40px 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-    <div id="title" style="font-size: 3em; text-align: center; transform: translateX(-6px);">PodPIVO</div>
-    <div id="links" style="display: flex; justify-content: center; gap: 80px; width: 100%; max-width: 600px; margin-top: 10px;">
-        <a href="search.html" style="font-size: 1.5em;">Поиск</a>
-        <a href="catalog.html" style="font-size: 1.5em;">Каталог</a>
-        <a href="#contact" style="font-size: 1.5em;">Помощь</a>
-    </div>
-</div>
-<center>
-    <div id="middle">
-        <div id="center" class="animated zoomIn" style="animation-delay:1.8s; font-size: 3rem; font-weight: bold; text-align: center;">
-            Начните смотреть прямо сейчас!<br>
-            <button class="btn_one" onclick="window.location.href = 'search.html';" 
-                style="font-size: 1.5rem; padding: 15px 30px; margin-top: 20px;">
-                Смотреть
-            </button>
+    <div id="header" class="animated slideInDown" style="animation-delay:1.8s; padding: 40px 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div id="title" style="font-size: 3em; text-align: center; transform: translateX(-6px);">PodPIVO</div>
+        <div id="links" style="display: flex; justify-content: center; gap: 80px; width: 100%; max-width: 600px; margin-top: 10px;">
+            <a href="search.html" style="font-size: 1.5em;">Поиск</a>
+            <a href="catalog.html" style="font-size: 1.5em;">Каталог</a>
+            <a href="#contact" style="font-size: 1.5em;">Помощь</a>
         </div>
     </div>
-</center>
+    <center>
+        <div id="middle">
+            <div id="center" class="animated zoomIn" style="animation-delay:1.8s; font-size: 3rem; font-weight: bold; text-align: center;">
+                Начните смотреть прямо сейчас!<br>
+                <button class="btn_one" onclick="window.location.href = 'search.html';" 
+                    style="font-size: 1.5rem; padding: 15px 30px; margin-top: 20px;">
+                    Смотреть
+                </button>
+            </div>
+        </div>
+    </center>
     <div id="portfolio">
-             <div id="Топ 10 за неделю">
-                 <h1>Топ 10 за неделю</h1>   
-                 <div>
-                        <p>
-                            
-                        </p>
-                 </div> 
-             </div>
-         
-              <div id="work">
-                 <h1>works.</h1>
+        <div id="Топ 10 за неделю">
+            <h1>Топ 10 за неделю</h1>
+            <div id="top10-container" style="display: flex; overflow-x: auto; gap: 20px; padding: 20px;">
+                <!-- Карточки фильмов/сериалов будут добавлены сюда -->
+            </div>
+        </div>
 
-                 <div class="project">
-                 <h2>project title 1</h2>
-                 <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum tincidunt nulla, id semper mi cursus ac. Fusce turpis urna, condimentum sit amet dolor at, vulputate ultrices massa. Vestibulum non euismod nulla, eu pretium risus. Curabitur porta molestie vulputate.</div>
-                 <button class="btn_one">visit project</button>
+        <div id="work">
+            <h1>works.</h1>
+
+            <div class="project">
+                <h2>project title 1</h2>
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum tincidunt nulla, id semper mi cursus ac. Fusce turpis urna, condimentum sit amet dolor at, vulputate ultrices massa. Vestibulum non euismod nulla, eu pretium risus. Curabitur porta molestie vulputate.</div>
+                <button class="btn_one">visit project</button>
+            </div>
+
+            <div class="project">
+                <h2>project title 2</h2>
+                <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum tincidunt nulla, id semper mi cursus ac. Fusce turpis urna, condimentum sit amet dolor at, vulputate ultrices massa. Vestibulum non euismod nulla, eu pretium risus. Curabitur porta molestie vulputate.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum tincidunt nulla, id semper mi cursus ac. Fusce turpis urna, condimentum sit amet dolor at, vulputate ultrices massa. Vestibulum non euismod nulla, eu pretium risus. Curabitur porta molestie vulputate.
                 </div>
+                <button class="btn_one">visit project</button>
+                <button class="btn_two">code</button>
+            </div>
+        </div>
 
-                <div class="project">
-                 <h2>project title 2</h2>
-                 <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum tincidunt nulla, id semper mi cursus ac. Fusce turpis urna, condimentum sit amet dolor at, vulputate ultrices massa. Vestibulum non euismod nulla, eu pretium risus. Curabitur porta molestie vulputate.Lorem ipsum dolor sit amet, consectetur adipiscing elit. In bibendum tincidunt nulla, id semper mi cursus ac. Fusce turpis urna, condimentum sit amet dolor at, vulputate ultrices massa. Vestibulum non euismod nulla, eu pretium risus. Curabitur porta molestie vulputate.
-                 </div>
-                 <button class="btn_one">visit project</button>
-                 <button class="btn_two">code</button>
-                </div>
-
-             </div>
-         
-              <div id="contact">
-                 <h1>contact.</h1> 
-                 <form>
-                     <input type="text" placeholder="name" required>
-                     <input type="email" placeholder="email" required><br>
-                     <textarea placeholder="your message" required rows="5"></textarea><br>
-                     <button class="btn_one">send</button>
-                 </form> 
-                 <div id="details">
-                    <a class="btn_social"><i class="fas fa-phone"></i></a>
-                    <a class="btn_social"><i class="fas fa-at"></i></a>
-                    <a class="btn_social"><i class="fab fa-twitter"></i></a>
-                    <a class="btn_social"><i class="fab fa-dribbble"></i></a>
-                 </div>   
-             </div>
+        <div id="contact">
+            <h1>contact.</h1> 
+            <form>
+                <input type="text" placeholder="name" required>
+                <input type="email" placeholder="email" required><br>
+                <textarea placeholder="your message" required rows="5"></textarea><br>
+                <button class="btn_one">send</button>
+            </form> 
+            <div id="details">
+                <a class="btn_social"><i class="fas fa-phone"></i></a>
+                <a class="btn_social"><i class="fas fa-at"></i></a>
+                <a class="btn_social"><i class="fab fa-twitter"></i></a>
+                <a class="btn_social"><i class="fab fa-dribbble"></i></a>
+            </div>   
+        </div>
     </div>
     <div id="footer">
         made on earth by a human <br><br> <a href="https://imfunniee.github.io">imfunniee</a>
     </div>
-<script src="index.js" type="text/javascript"></script>
+
+    <!-- Подключаем config.js с API ключом -->
+    <script src="config.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const apiKey = TMDB_API_KEY; // API ключ из config.js
+            const top10Container = document.getElementById('top10-container');
+
+            // Функция для получения популярных фильмов за неделю
+            async function fetchTop10Movies() {
+                const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    displayTop10(data.results.slice(0, 10)); // Берем только первые 10 результатов
+                } catch (error) {
+                    console.error('Ошибка при получении данных:', error);
+                }
+            }
+
+            // Функция для отображения карточек фильмов
+            function displayTop10(movies) {
+                top10Container.innerHTML = ''; // Очищаем контейнер перед добавлением новых карточек
+                movies.forEach(movie => {
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.style.flex = '0 0 auto';
+                    movieCard.style.width = '200px';
+                    movieCard.style.textAlign = 'center';
+
+                    const posterPath = movie.poster_path ? `https://image.tmdb.org/t/p/w200${movie.poster_path}` : 'https://via.placeholder.com/200x300';
+                    movieCard.innerHTML = `
+                        <img src="${posterPath}" alt="${movie.title}" style="width: 100%; border-radius: 10px;">
+                        <h3>${movie.title}</h3>
+                        <p>Рейтинг: ${movie.vote_average}</p>
+                    `;
+
+                    top10Container.appendChild(movieCard);
+                });
+            }
+
+            // Вызываем функцию для получения данных
+            fetchTop10Movies();
+        });
+    </script>
+    <script src="index.js" type="text/javascript"></script>
 </body>
 </html>
