@@ -10,6 +10,34 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css">
+    <style>
+        /* Стили для горизонтальной полоски с фильмами и сериалами */
+        #top-10 {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            margin-top: 20px;
+        }
+        .movie-card, .tv-card {
+            flex: 0 0 auto;
+            width: 200px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+        }
+        .movie-card img, .tv-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .movie-card h3, .tv-card h3 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <div id="loading">
@@ -36,10 +64,8 @@
     <div id="portfolio">
         <div id="Топ 10 за неделю">
             <h1>Топ 10 за неделю</h1>
-            <div>
-                <p>
-                    <!-- Здесь можно добавить контент для топа 10 -->
-                </p>
+            <div id="top-10">
+                <!-- Здесь будут отображаться карточки фильмов и сериалов -->
             </div>
         </div>
 
@@ -79,6 +105,53 @@
     <div id="footer">
         made by Hengras <br><br> <a href="#">Ссылка</a>
     </div>
-    <script src="index.js" type="text/javascript"></script>
+    <script>
+        const apiKey = '5205b8c031492a75039f7f449c72a948'; // Ваш API-ключ
+        const top10Container = document.getElementById('top-10');
+
+        // Функция для получения топ-10 фильмов
+        async function fetchTopMovies() {
+            const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.slice(0, 10); // Берем только первые 10 фильмов
+        }
+
+        // Функция для получения топ-10 сериалов
+        async function fetchTopTVShows() {
+            const url = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.slice(0, 10); // Берем только первые 10 сериалов
+        }
+
+        // Функция для создания карточки фильма или сериала
+        function createCard(item, type) {
+            const card = document.createElement('div');
+            card.className = type === 'movie' ? 'movie-card' : 'tv-card';
+            card.innerHTML = `
+                <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" alt="${item.title || item.name}">
+                <h3>${item.title || item.name}</h3>
+            `;
+            return card;
+        }
+
+        // Функция для отображения топ-10 фильмов и сериалов
+        async function displayTop10() {
+            const movies = await fetchTopMovies();
+            const tvShows = await fetchTopTVShows();
+
+            movies.forEach(movie => {
+                top10Container.appendChild(createCard(movie, 'movie'));
+            });
+
+            tvShows.forEach(tvShow => {
+                top10Container.appendChild(createCard(tvShow, 'tv'));
+            });
+        }
+
+        // Запуск функции для отображения топ-10
+        displayTop10();
+    </script>
 </body>
 </html>
