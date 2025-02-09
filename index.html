@@ -111,18 +111,34 @@
 
         // Функция для получения топ-10 фильмов
         async function fetchTopMovies() {
-            const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            return data.results.slice(0, 10); // Берем только первые 10 фильмов
+            try {
+                const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.results.slice(0, 10); // Берем только первые 10 фильмов
+            } catch (error) {
+                console.error('Ошибка при загрузке фильмов:', error);
+                return [];
+            }
         }
 
         // Функция для получения топ-10 сериалов
         async function fetchTopTVShows() {
-            const url = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            return data.results.slice(0, 10); // Берем только первые 10 сериалов
+            try {
+                const url = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Ошибка HTTP: ${response.status}`);
+                }
+                const data = await response.json();
+                return data.results.slice(0, 10); // Берем только первые 10 сериалов
+            } catch (error) {
+                console.error('Ошибка при загрузке сериалов:', error);
+                return [];
+            }
         }
 
         // Функция для создания карточки фильма или сериала
@@ -130,7 +146,7 @@
             const card = document.createElement('div');
             card.className = type === 'movie' ? 'movie-card' : 'tv-card';
             card.innerHTML = `
-                <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" alt="${item.title || item.name}">
+                <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" alt="${item.title || item.name}" onerror="this.src='https://via.placeholder.com/200x300';">
                 <h3>${item.title || item.name}</h3>
             `;
             return card;
