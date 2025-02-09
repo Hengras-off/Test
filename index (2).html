@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PodPIVO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:700" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        /* Стили для горизонтальной полоски с фильмами и сериалами */
+        #top-10 {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            margin-top: 20px;
+        }
+        .movie-card, .tv-card {
+            flex: 0 0 auto;
+            width: 200px;
+            text-align: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+        }
+        .movie-card img, .tv-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .movie-card h3, .tv-card h3 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div id="spinner"></div>
+    </div>
+    <div id="header" class="animated slideInDown" style="animation-delay:1.8s; padding: 40px 0; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div id="title" style="font-size: 3em; text-align: center; transform: translateX(-6px);">PodPIVO</div>
+        <div id="links" style="display: flex; justify-content: center; gap: 80px; width: 100%; max-width: 600px; margin-top: 10px;">
+            <a href="search.html" style="font-size: 1.5em;">Поиск</a>
+            <a href="catalog.html" style="font-size: 1.5em;">Каталог</a>
+            <a href="#contact" style="font-size: 1.5em;">Помощь</a>
+        </div>
+    </div>
+    <center>
+        <div id="middle">
+            <div id="center" class="animated zoomIn" style="animation-delay:1.8s; font-size: 3rem; font-weight: bold; text-align: center;">
+                Начните смотреть прямо сейчас!<br>
+                <button class="btn_one" onclick="window.location.href = 'search.html';" style="font-size: 1.5rem; padding: 15px 30px; margin-top: 20px;">
+                    Смотреть
+                </button>
+            </div>
+        </div>
+    </center>
+    <div id="portfolio">
+        <div id="Топ 10 за неделю">
+            <h1>Топ 10 за неделю</h1>
+            <div id="top-10">
+                <!-- Здесь будут отображаться карточки фильмов и сериалов -->
+            </div>
+        </div>
+
+        <div id="work">
+            <h1>Помощь</h1>
+
+            <div class="project">
+                <h2>Не получается найти?</h2>
+                <div>Если не находит фильм/сериал/аниме, то воспользуйтесь универсальным поиском!</div>
+                <button class="btn_one">Подробнее</button>
+            </div>
+
+            <div class="project">
+                <h2>Что такое универсальный поиск?</h2>
+                <div>Универсальный поиск — это поиск, оснащённый плеером, в который встроено более 100 тыс. фильмов, сериалов, аниме и т. д. Если остаются вопросы, нажмите на кнопку «Связь» и следуйте дальнейшим инструкциям.</div>
+                <button class="btn_one" onclick="window.location.href='search.html'">Универсальный поиск</button>
+                <button class="btn_two">Связь</button>
+            </div>
+        </div>
+
+        <div id="contact">
+            <h1>Контакты</h1>
+            <form>
+                <input type="text" placeholder="Имя" required>
+                <input type="email" placeholder="Email" required><br>
+                <textarea placeholder="Ваше сообщение" required rows="5"></textarea><br>
+                <button class="btn_one">Отправить</button>
+            </form>
+            <div id="details">
+                <a class="btn_social"><i class="fas fa-phone"></i></a>
+                <a class="btn_social"><i class="fas fa-at"></i></a>
+                <a class="btn_social"><i class="fab fa-twitter"></i></a>
+                <a class="btn_social"><i class="fab fa-dribbble"></i></a>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        made by Hengras <br><br> <a href="#">Ссылка</a>
+    </div>
+    <script>
+        const apiKey = '5205b8c031492a75039f7f449c72a948'; // Ваш API-ключ
+        const top10Container = document.getElementById('top-10');
+
+        // Функция для получения топ-10 фильмов
+        async function fetchTopMovies() {
+            const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.slice(0, 10); // Берем только первые 10 фильмов
+        }
+
+        // Функция для получения топ-10 сериалов
+        async function fetchTopTVShows() {
+            const url = `https://api.themoviedb.org/3/trending/tv/week?api_key=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.results.slice(0, 10); // Берем только первые 10 сериалов
+        }
+
+        // Функция для создания карточки фильма или сериала
+        function createCard(item, type) {
+            const card = document.createElement('div');
+            card.className = type === 'movie' ? 'movie-card' : 'tv-card';
+            card.innerHTML = `
+                <img src="https://image.tmdb.org/t/p/w500${item.poster_path}" alt="${item.title || item.name}">
+                <h3>${item.title || item.name}</h3>
+            `;
+            return card;
+        }
+
+        // Функция для отображения топ-10 фильмов и сериалов
+        async function displayTop10() {
+            const movies = await fetchTopMovies();
+            const tvShows = await fetchTopTVShows();
+
+            movies.forEach(movie => {
+                top10Container.appendChild(createCard(movie, 'movie'));
+            });
+
+            tvShows.forEach(tvShow => {
+                top10Container.appendChild(createCard(tvShow, 'tv'));
+            });
+        }
+
+        // Запуск функции для отображения топ-10
+        displayTop10();
+    </script>
+</body>
+</html>
